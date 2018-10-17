@@ -69,6 +69,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     let box = SKSpriteNode(color: RandomColor(), size: size)
                     box.zRotation = RandomCGFloat(min: 0, max: 3)
                     box.position = location
+                    print(box.position)
                     
                     box.physicsBody = SKPhysicsBody(rectangleOf: box.size)
                     box.physicsBody?.isDynamic = false
