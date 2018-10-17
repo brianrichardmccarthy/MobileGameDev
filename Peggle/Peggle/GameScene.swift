@@ -75,7 +75,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     addChild(box)
                 } else {
-                    let ball = SKSpriteNode(imageNamed: "ballRed")
+                    
+                    let r = RandomInt(min: 0, max: 7)
+                    var ball: SKSpriteNode
+                    
+                    switch (r) {
+                        case 0:
+                            ball = SKSpriteNode(imageNamed: "ballBlue")
+                        case 1:
+                            ball = SKSpriteNode(imageNamed: "ballCyan")
+                        case 2:
+                            ball = SKSpriteNode(imageNamed: "ballGreen")
+                        case 3:
+                            ball = SKSpriteNode(imageNamed: "ballGrey")
+                        case 4:
+                            ball = SKSpriteNode(imageNamed: "ballPurple")
+                        case 5:
+                            ball = SKSpriteNode(imageNamed: "ballRed")
+                        default:
+                            ball = SKSpriteNode(imageNamed: "ballYellow")
+                    }
+                    
+                    // let ball = SKSpriteNode(imageNamed: "ballRed")
                     ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width / 2.0)
                     ball.physicsBody?.restitution = 0.4
                     ball.position = location
