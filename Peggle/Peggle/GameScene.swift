@@ -100,7 +100,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     // let ball = SKSpriteNode(imageNamed: "ballRed")
                     ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width / 2.0)
                     ball.physicsBody?.restitution = 0.4
-                    ball.position = location
+                    ball.position = CGPoint(x: location.x, y: RandomCGFloat(min: 618, max: 768))
                     ball.name = "ball"
                     ball.physicsBody!.contactTestBitMask = ball.physicsBody!.collisionBitMask
                     addChild(ball)
@@ -160,7 +160,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             fireParticles.position = ball.position
             addChild(fireParticles)
         }
-        
         ball.removeFromParent()
     }
     
