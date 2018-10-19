@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		61458E592179E63C0001F0C9 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61458E582179E63C0001F0C9 /* Helper.swift */; };
 		61B539E721776E8900CF29CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B539E621776E8900CF29CF /* AppDelegate.swift */; };
 		61B539E921776E8900CF29CF /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 61B539E821776E8900CF29CF /* GameScene.sks */; };
 		61B539ED21776E8900CF29CF /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B539EC21776E8900CF29CF /* GameScene.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		61458E582179E63C0001F0C9 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		61B539E321776E8900CF29CF /* Peggle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Peggle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B539E621776E8900CF29CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		61B539E821776E8900CF29CF /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				61B539E621776E8900CF29CF /* AppDelegate.swift */,
 				61B539E821776E8900CF29CF /* GameScene.sks */,
 				61B539EC21776E8900CF29CF /* GameScene.swift */,
+				61458E582179E63C0001F0C9 /* Helper.swift */,
 				61B539EE21776E8900CF29CF /* GameViewController.swift */,
 				61B539F021776E8900CF29CF /* Main.storyboard */,
 				61B539F321776E8A00CF29CF /* Assets.xcassets */,
@@ -265,6 +268,7 @@
 				61B539ED21776E8900CF29CF /* GameScene.swift in Sources */,
 				61B539EF21776E8900CF29CF /* GameViewController.swift in Sources */,
 				61B539E721776E8900CF29CF /* AppDelegate.swift in Sources */,
+				61458E592179E63C0001F0C9 /* Helper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
