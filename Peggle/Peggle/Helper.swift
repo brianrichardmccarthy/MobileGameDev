@@ -5,10 +5,6 @@
 //  Created by Hudzilla on 22/11/2014.
 //  Copyright (c) 2014 Hudzilla. All rights reserved.
 //
-<<<<<<< HEAD
-=======
-
->>>>>>> d6b783c01e4757596cebec6a04312ef1ddf82273
 import Foundation
 import UIKit
 
