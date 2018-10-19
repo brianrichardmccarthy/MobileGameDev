@@ -54,6 +54,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         editLabel.text = "Edit"
         editLabel.position = CGPoint(x: 80, y: 700)
         addChild(editLabel)
+        
+        for x in 1...9 {
+            for _ in 0...1 {
+                makeBox(at: CGPoint(x: RandomCGFloat(min: Float(100 * x), max: Float((100*x)+100)), y: RandomCGFloat(min: Float(300), max: Float(500))))
+            }
+        }
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -70,14 +77,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                             object.removeFromParent()
                         }
                     }
-                    let size = CGSize(width: GKRandomDistribution(lowestValue: 16, highestValue: 128).nextInt(), height: 16)
-                    let box = SKSpriteNode(color: RandomColor(), size: size)
-                    box.zRotation = RandomCGFloat(min: 0, max: 3)
-                    box.position = location
-                    box.physicsBody = SKPhysicsBody(rectangleOf: box.size)
-                    box.physicsBody?.isDynamic = false
-                    box.name = "box"
-                    addChild(box)
+                    makeBox(at: location)
                 } else {
                     
                     let r = RandomInt(min: 0, max: 7)
@@ -119,6 +119,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(bouncer)
     }
     
+    func makeBox(at position: CGPoint) {
+        let size = CGSize(width: GKRandomDistribution(lowestValue: 16, highestValue: 128).nextInt(), height: 16)
+        let box = SKSpriteNode(color: RandomColor(), size: size)
+        box.zRotation = RandomCGFloat(min: 0, max: 3)
+        box.position = position
+        box.physicsBody = SKPhysicsBody(rectangleOf: box.size)
+        box.physicsBody?.isDynamic = false
+        box.name = "box"
+        addChild(box)
+    }
+    
     func makeSlot(at position: CGPoint, isGood: Bool) {
         var slotBase: SKSpriteNode
         var slotGlow: SKSpriteNode
@@ -154,6 +165,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if object.name == "bad" {
             destroy(ball: ball)
             score -= 1
+        } else if object.name == "box" {
+            destroy(ball: object)
         }
     }
     
