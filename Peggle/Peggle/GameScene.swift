@@ -113,6 +113,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         ball.physicsBody!.contactTestBitMask = ball.physicsBody!.collisionBitMask
                         ball.userData = NSMutableDictionary()
                         ball.userData?.setValue(0, forKey: "pinCollisions")
+                        ball.userData?.setValue(0, forKey: "bouncerCollisions")
+                        ball.userData?.setValue(ball.position, forKey: "originalPos")
                         addChild(ball)
                     } else {
                         //print("Sorry No more balls")
@@ -127,6 +129,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bouncer.position = position
         bouncer.physicsBody = SKPhysicsBody(circleOfRadius: bouncer.size.width / 2.0)
         bouncer.physicsBody?.isDynamic = false
+        bouncer.name = "bouncer"
+        let s = SKAction.resize(toWidth: <#T##CGFloat#>, height: <#T##CGFloat#>, duration: <#T##TimeInterval#>)
         addChild(bouncer)
     }
     
@@ -165,6 +169,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         slotBase.physicsBody = SKPhysicsBody(rectangleOf: slotBase.size)
         slotBase.physicsBody?.isDynamic = false
         
+        slotBase.userData = NSMutableDictionary()
+        slotBase.userData?.setValue(slotGlow, forKey: "slotGlow")
         addChild(slotBase)
         addChild(slotGlow)
     }
@@ -176,12 +182,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 score += 1
                 maxBalls += 1
             }
+            
+            makeSlot(at: object.position, isGood: false)
+            destroy(ball: object.userData?["slotGlow"] as! SKNode)
+            destroy(ball: object)
         } else if object.name == "bad" {
             destroy(ball: ball)
+            makeSlot(at: object.position, isGood: true)
+            destroy(ball: object.userData?["slotGlow"] as! SKNode)
+            destroy(ball: object)
             score -= 1
         } else if object.name == "box" {
             ball.userData?.setValue(ball.userData?["pinCollisions"] as! Int + 1, forKey: "pinCollisions")
             destroy(ball: object)
+        } else if object.name == "bouncer" {
+            ball.userData?.setValue(ball.userData?["bouncerCollisions"] as! Int + 1, forKey: "bouncerCollisions")
+            if ball.userData?["bouncerCollisions"] as! Int == 2 {
+                //ball.userData?.setValue(0, forKey: "bouncerCollisions")
+                let bphysics: SKPhysicsBody = ball.physicsBody!
+                ball.physicsBody = nil
+                ball.position = ball.userData?["originalPos"] as! CGPoint
+                ball.physicsBody = bphysics
+            }
         }
     }
 
@@ -190,6 +212,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             fireParticles.position = ball.position
             addChild(fireParticles)
         }
+        
         ball.removeFromParent()
     }
     
