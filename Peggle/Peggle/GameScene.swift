@@ -62,6 +62,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
+        
+        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(resize), SKAction.wait(forDuration: 1.0)])))
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -130,8 +133,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bouncer.physicsBody = SKPhysicsBody(circleOfRadius: bouncer.size.width / 2.0)
         bouncer.physicsBody?.isDynamic = false
         bouncer.name = "bouncer"
-        let s = SKAction.resize(toWidth: <#T##CGFloat#>, height: <#T##CGFloat#>, duration: <#T##TimeInterval#>)
+        //bouncer.s
         addChild(bouncer)
+    }
+    
+    func resize() {
+        let bouncers = children.filter { $0.name == "bouncer" }
+        print((bouncers[0] as! SKSpriteNode).size)
+        let a = SKAction.resize(toWidth: CGFloat(1.0), height: CGFloat(1.0), duration: 0.1)
     }
     
     func makeBox(at position: CGPoint) {
