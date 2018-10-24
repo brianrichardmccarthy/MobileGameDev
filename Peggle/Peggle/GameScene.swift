@@ -12,6 +12,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var scoreLabel: SKLabelNode!
     var editLabel: SKLabelNode!
+    var maxBalls: Int = 5
     
     var score = 0 {
         didSet {
@@ -64,6 +65,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        //print(maxBalls)
         if let touch = touches.first {
             let location = touch.location(in: self)
             let objects = nodes(at: location)
@@ -81,11 +83,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     makeBox(at: location)
                     
                 } else {
-                    
-                    let r = RandomInt(min: 0, max: 7)
-                    var ball: SKSpriteNode
-                    
-                    switch (r) {
+                    if maxBalls > 0 {
+                       maxBalls -= 1
+                        let r = RandomInt(min: 0, max: 7)
+                        var ball: SKSpriteNode
+                        
+                        switch (r) {
                         case 0:
                             ball = SKSpriteNode(imageNamed: "ballBlue")
                         case 1:
@@ -100,15 +103,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                             ball = SKSpriteNode(imageNamed: "ballRed")
                         default:
                             ball = SKSpriteNode(imageNamed: "ballYellow")
+                        }
+                        
+                        
+                        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width / 2.0)
+                        ball.physicsBody?.restitution = 0.4
+                        ball.position = CGPoint(x: location.x, y: RandomCGFloat(min: 618, max: 768))
+                        ball.name = "ball"
+                        ball.physicsBody!.contactTestBitMask = ball.physicsBody!.collisionBitMask
+                        ball.userData = NSMutableDictionary()
+                        ball.userData?.setValue(0, forKey: "pinCollisions")
+                        addChild(ball)
+                    } else {
+                        //print("Sorry No more balls")
                     }
-                    
-
-                    ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width / 2.0)
-                    ball.physicsBody?.restitution = 0.4
-                    ball.position = CGPoint(x: location.x, y: RandomCGFloat(min: 618, max: 768))
-                    ball.name = "ball"
-                    ball.physicsBody!.contactTestBitMask = ball.physicsBody!.collisionBitMask
-                    addChild(ball)
                 }
             }
         }
@@ -164,11 +172,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func collisionBetween(ball: SKNode, object: SKNode) {
         if object.name == "good" {
             destroy(ball: ball)
-            score += 1
+            if ball.userData?["pinCollisions"] as! Int >= 2 {
+                score += 1
+                maxBalls += 1
+            }
         } else if object.name == "bad" {
             destroy(ball: ball)
             score -= 1
         } else if object.name == "box" {
+            ball.userData?.setValue(ball.userData?["pinCollisions"] as! Int + 1, forKey: "pinCollisions")
             destroy(ball: object)
         }
     }
