@@ -69,7 +69,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
         for x in 1...9 {
             for _ in 0...1 {
-                // makeBox(at: CGPoint(x: RandomCGFloat(min: Float(100 * x), max: Float((100*x)+100)), y: RandomCGFloat(min: Float(300), max: Float(500))))
+                makeBox(at: CGPoint(x: RandomCGFloat(min: Float(100 * x), max: Float((100*x)+100)), y: RandomCGFloat(min: Float(300), max: Float(500))))
             }
         }
         
@@ -79,7 +79,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //print(maxBalls)
         if let touch = touches.first {
             let location = touch.location(in: self)
             let objects = nodes(at: location)
@@ -98,7 +97,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                 } else {
                     if maxBalls > 0 {
-                       //maxBalls -= 1
+                        maxBalls -= 1
                         let r = RandomInt(min: 0, max: 7)
                         var ball: SKSpriteNode
                         
@@ -130,8 +129,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         ball.userData?.setValue(0, forKey: "bouncerCollisions")
                         ball.userData?.setValue(ball.position, forKey: "originalPos")
                         addChild(ball)
-                    } else {
-                        //print("Sorry No more balls")
                     }
                 }
             }
@@ -144,7 +141,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bouncer.physicsBody = SKPhysicsBody(circleOfRadius: bouncer.size.width / 2.0)
         bouncer.physicsBody?.isDynamic = false
         bouncer.name = "bouncer"
-        //bouncer.s
         addChild(bouncer)
     }
     
@@ -233,6 +229,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             score -= 1
         } else if object.name == "box" {
             ball.userData?.setValue(ball.userData?["pinCollisions"] as! Int + 1, forKey: "pinCollisions")
+            let pos = (object.position.x / 100).rounded(.towardZero)
+            makeBox(at: CGPoint(x: RandomCGFloat(min: Float(100 * pos), max: Float((100*pos)+100)), y: RandomCGFloat(min: Float(300), max: Float(500))))
             destroy(ball: object)
         } else if object.name == "bouncer" {
             ball.userData?.setValue(ball.userData?["bouncerCollisions"] as! Int + 1, forKey: "bouncerCollisions")
