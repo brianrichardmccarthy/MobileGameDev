@@ -10,6 +10,7 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    var startGame: Bool!
     var scoreLabel: SKLabelNode!
     var editLabel: SKLabelNode!
     var ballsLabel: SKLabelNode!
@@ -42,9 +43,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.blendMode = .replace
         background.zPosition = -1
         addChild(background)
-        makeSlot(at: CGPoint(x: 128, y: 0), isGood: true)
+        makeSlot(at: CGPoint(x: 128, y: 0), isGood: false)
         makeSlot(at: CGPoint(x: 384, y: 0), isGood: false)
-        makeSlot(at: CGPoint(x: 640, y: 0), isGood: true)
+        makeSlot(at: CGPoint(x: 640, y: 0), isGood: false)
         makeSlot(at: CGPoint(x: 896, y: 0), isGood: false)
         makeBouncer(at: CGPoint(x: 0, y: 0))
         makeBouncer(at: CGPoint(x: 256, y: 0))
@@ -65,7 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ballsLabel.horizontalAlignmentMode = .right
         ballsLabel.position = CGPoint(x: 980, y: 650)
         addChild(ballsLabel)
-        
+        physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
         for x in 1...9 {
             for _ in 0...1 {
                 // makeBox(at: CGPoint(x: RandomCGFloat(min: Float(100 * x), max: Float((100*x)+100)), y: RandomCGFloat(min: Float(300), max: Float(500))))
@@ -74,7 +75,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         run(SKAction.repeatForever(SKAction.sequence([SKAction.run(resize), SKAction.wait(forDuration: 3.0)])))
-        
+        startGame = true
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -97,7 +98,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                 } else {
                     if maxBalls > 0 {
-                       maxBalls -= 1
+                       //maxBalls -= 1
                         let r = RandomInt(min: 0, max: 7)
                         var ball: SKSpriteNode
                         
@@ -200,21 +201,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         slotBase.userData?.setValue(slotGlow, forKey: "slotGlow")
         addChild(slotBase)
         addChild(slotGlow)
-    }
-    
-    override func update(_ currentTime: TimeInterval) {
+        
+        
         var slots = children.filter { $0.name == "bad" }
+        
         if slots.count == 4 {
             let i = RandomInt(min: 0, max: 3)
-            makeSlot(at: slots[i].position, isGood: true)
+            let pos: CGPoint = slots[i].position
+            destroy(ball: slots[i].userData?["slotGlow"] as! SKNode)
             destroy(ball: slots[i])
+            makeSlot(at: pos, isGood: true)
         }
-        
-        let balls = children.filter { $0.name == "ball" }
-        print(balls.count)
-        
     }
-    
     
     func collisionBetween(ball: SKNode, object: SKNode) {
         if object.name == "good" {
