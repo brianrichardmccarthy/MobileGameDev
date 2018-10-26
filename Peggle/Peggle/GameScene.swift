@@ -12,7 +12,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var scoreLabel: SKLabelNode!
     var editLabel: SKLabelNode!
-    var maxBalls: Int = 5
+    var ballsLabel: SKLabelNode!
+    var maxBalls: Int = 5 {
+        didSet {
+            ballsLabel.text = "Balls: \(maxBalls)"
+        }
+    }
     
     var score = 0 {
         didSet {
@@ -37,15 +42,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.blendMode = .replace
         background.zPosition = -1
         addChild(background)
+        makeSlot(at: CGPoint(x: 128, y: 0), isGood: true)
+        makeSlot(at: CGPoint(x: 384, y: 0), isGood: false)
+        makeSlot(at: CGPoint(x: 640, y: 0), isGood: true)
+        makeSlot(at: CGPoint(x: 896, y: 0), isGood: false)
         makeBouncer(at: CGPoint(x: 0, y: 0))
         makeBouncer(at: CGPoint(x: 256, y: 0))
         makeBouncer(at: CGPoint(x: 512, y: 0))
         makeBouncer(at: CGPoint(x: 768, y: 0))
         makeBouncer(at: CGPoint(x: 1024, y: 0))
-        makeSlot(at: CGPoint(x: 128, y: 0), isGood: true)
-        makeSlot(at: CGPoint(x: 384, y: 0), isGood: false)
-        makeSlot(at: CGPoint(x: 640, y: 0), isGood: true)
-        makeSlot(at: CGPoint(x: 896, y: 0), isGood: false)
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
         scoreLabel.text = "Score: 0"
         scoreLabel.horizontalAlignmentMode = .right
@@ -55,15 +60,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         editLabel.text = "Edit"
         editLabel.position = CGPoint(x: 80, y: 700)
         addChild(editLabel)
+        ballsLabel = SKLabelNode(fontNamed: "Chalkduster")
+        ballsLabel.text = "Balls: \(maxBalls)"
+        ballsLabel.horizontalAlignmentMode = .right
+        ballsLabel.position = CGPoint(x: 980, y: 650)
+        addChild(ballsLabel)
         
         for x in 1...9 {
             for _ in 0...1 {
-                makeBox(at: CGPoint(x: RandomCGFloat(min: Float(100 * x), max: Float((100*x)+100)), y: RandomCGFloat(min: Float(300), max: Float(500))))
+                // makeBox(at: CGPoint(x: RandomCGFloat(min: Float(100 * x), max: Float((100*x)+100)), y: RandomCGFloat(min: Float(300), max: Float(500))))
             }
         }
         
         
-        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(resize), SKAction.wait(forDuration: 1.0)])))
+        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(resize), SKAction.wait(forDuration: 3.0)])))
         
     }
     
@@ -139,8 +149,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func resize() {
         let bouncers = children.filter { $0.name == "bouncer" }
-        print((bouncers[0] as! SKSpriteNode).size)
-        let a = SKAction.resize(toWidth: CGFloat(1.0), height: CGFloat(1.0), duration: 0.1)
+        for bouncer in bouncers {
+            let b = bouncer as! SKSpriteNode
+            var action: SKAction!
+            if b.size.width > 191 {
+                action = SKAction.resize(toWidth: CGFloat(128.0), height: CGFloat(128.0), duration: 2)
+            } else {
+                action = SKAction.resize(toWidth: CGFloat(192.0), height: CGFloat(192.0), duration: 2)
+            }
+            b.run(action)
+        }
     }
     
     func makeBox(at position: CGPoint) {
@@ -183,6 +201,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(slotBase)
         addChild(slotGlow)
     }
+    
+    override func update(_ currentTime: TimeInterval) {
+        var slots = children.filter { $0.name == "bad" }
+        if slots.count == 4 {
+            let i = RandomInt(min: 0, max: 3)
+            makeSlot(at: slots[i].position, isGood: true)
+            destroy(ball: slots[i])
+        }
+        
+        let balls = children.filter { $0.name == "ball" }
+        print(balls.count)
+        
+    }
+    
     
     func collisionBetween(ball: SKNode, object: SKNode) {
         if object.name == "good" {
