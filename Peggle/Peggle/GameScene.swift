@@ -44,9 +44,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.zPosition = -1
         addChild(background)
         makeSlot(at: CGPoint(x: 128, y: 0), isGood: false)
-        makeSlot(at: CGPoint(x: 384, y: 0), isGood: false)
+        makeSlot(at: CGPoint(x: 384, y: 0), isGood: true)
         makeSlot(at: CGPoint(x: 640, y: 0), isGood: false)
-        makeSlot(at: CGPoint(x: 896, y: 0), isGood: false)
+        makeSlot(at: CGPoint(x: 896, y: 0), isGood: true)
         makeBouncer(at: CGPoint(x: 0, y: 0))
         makeBouncer(at: CGPoint(x: 256, y: 0))
         makeBouncer(at: CGPoint(x: 512, y: 0))
@@ -235,7 +235,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if object.name == "bouncer" {
             ball.userData?.setValue(ball.userData?["bouncerCollisions"] as! Int + 1, forKey: "bouncerCollisions")
             if ball.userData?["bouncerCollisions"] as! Int == 2 {
-                //ball.userData?.setValue(0, forKey: "bouncerCollisions")
                 let bphysics: SKPhysicsBody = ball.physicsBody!
                 ball.physicsBody = nil
                 ball.position = ball.userData?["originalPos"] as! CGPoint
@@ -245,9 +244,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func destroy(ball: SKNode) {
-        if let fireParticles = SKEmitterNode(fileNamed: "FireParticles") {
-            fireParticles.position = ball.position
-            addChild(fireParticles)
+        if ball.name == "ball" || ball.name == "box" {
+            if let fireParticles = SKEmitterNode(fileNamed: "FireParticles") {
+                fireParticles.position = ball.position
+                addChild(fireParticles)
+            }
         }
         
         ball.removeFromParent()
